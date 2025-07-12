@@ -1,15 +1,10 @@
 # <p align="center">WME MapCommentGeometry</p>
 
-This script creates a note around a single selected road segment. It also allows you to create a camera or an arrow shaped note.  
+Hello,
+I started this fork of Map Comment Geometry because I had an idea for a new map comment shape and I wanted to learn about writing scripts.
 
-New: the screipt also allows you to create a school zone or a place around the road segment. 
+I wanted to make the "Speed Limit" polygon to reduce the map clutter from having so many point notes.  The point notes remain visible at all zoom levels and the small polgon notes are not visible when zoomed out.
 
-## Instructions
-1) Install this script in Tampermonkey.
-2) Select a road in WME (you can create a new one in the shape you want to make).
-3) Choose the width of the Map Comment from the dropdown or keep the default ("Infer").
-4) Click the "Create New" button at the bottom of the left pane or click the "Use Existing" button and then click on an existing Map Note to change its geometry to surround the selected road segment.
-5) If you want to convert a note to a camera or arrow-shaped area, create a new Map Note or select an existing one, and then click the corresponding button.
-6) If required, use WME PIE to rotate the resulting shape.
+Right now, the "SL Sign" shape is on the "Arrows" D-pad-down button that was not previously being used.
 
-<p align="center"><a href="https://raw.githubusercontent.com/YULWaze/WME-MapCommentGeometry/main/WME%20MapCommentGeometry.user.js"><img src="https://i.ibb.co/JzHFKzj/button-install-here.png"></a></p>
+<img src="https://github.com/MajorjcMS/WME-MapCommentGeometryMJC/blob/main_mjc/Screenshot%202025-07-12%20at%2013.57.26.png">
