@@ -8,8 +8,8 @@
 // @require			https://greasyfork.org/scripts/24851-wazewrap/code/WazeWrap.js
 // @require			https://cdn.jsdelivr.net/gh/TheEditorX/wme-sdk-plus@1.2/wme-sdk-plus.js
 // @require			https://cdn.jsdelivr.net/npm/@turf/turf@7/turf.min.js
-// @downloadURL		https://raw.githubusercontent.com/YULWaze/WME-MapCommentGeometry/main/WME%20MapCommentGeometry.user.js
-// @updateURL		https://raw.githubusercontent.com/YULWaze/WME-MapCommentGeometry/main/WME%20MapCommentGeometry.user.js
+// @downloadURL		https://github.com/MajorjcMS/WME-MapCommentGeometryMJC/blob/67d5a7f5d7c23c855b915a08c2a01568483a6be6/WME%20MapCommentGeometry.user.js
+// @updateURL		https://github.com/MajorjcMS/WME-MapCommentGeometryMJC/blob/67d5a7f5d7c23c855b915a08c2a01568483a6be6/WME%20MapCommentGeometry.user.js
 // @supportURL		https://github.com/YULWaze/WME-MapCommentGeometry/issues/new/choose
 // @version 		2025.06.06.1.mjc
 // ==/UserScript==
