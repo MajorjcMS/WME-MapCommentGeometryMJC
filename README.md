@@ -3,7 +3,7 @@
 Hello,
 I started this fork of Map Comment Geometry because I had an idea for a new map comment shape and I wanted to learn about writing scripts.
 
-I wanted to make the "Speed Limit" polygon to reduce the map clutter from having so many point notes.  The point notes remain visible at all zoom levels and the small polgon notes are not visible when zoomed out.
+I wanted to make the "Speed Limit" polygon to reduce the map clutter from having so many point notes.  The point notes remain visible at all zoom levels and the small polygon notes are not visible when zoomed out.
 
 Right now, the "SL Sign" shape is on the "Arrows" D-pad-down button that was not previously being used.
 
