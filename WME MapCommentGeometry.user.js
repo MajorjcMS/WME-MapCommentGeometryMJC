@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name 			WME MapCommentGeometry
+// @name 			WME MapCommentGeometryMJC
 // @author			YUL_
 // @description 	This script allows creating various map features around selected road segments. Additionally, it allows creating map comments shaped as cameras and arrows.
 // @match			*://*.waze.com/*editor*
@@ -11,7 +11,7 @@
 // @downloadURL		https://raw.githubusercontent.com/YULWaze/WME-MapCommentGeometry/main/WME%20MapCommentGeometry.user.js
 // @updateURL		https://raw.githubusercontent.com/YULWaze/WME-MapCommentGeometry/main/WME%20MapCommentGeometry.user.js
 // @supportURL		https://github.com/YULWaze/WME-MapCommentGeometry/issues/new/choose
-// @version 		2025.06.06.1
+// @version 		2025.06.06.1.mjc
 // ==/UserScript==
 
 /* global W */
@@ -64,7 +64,274 @@ See simplify.js by Volodymyr Agafonkin (https://github.com/mourner/simplify-js)
     await wmeSdk.Events.once({ eventName: "wme-initialized" });
   initWmeSdkPlus(wmeSdk);
 
-  const CameraLeftPoints = [
+  const SpeedLimitSign = [
+
+    [34, -42], // bottom right corner
+    [33.75, -43.5],
+    [33, -44.75],
+    [32, -45.5],
+    [31, -46],
+
+    [-31, -46], //bottom left corner
+    [-32, -45.5],
+    [-33, -44.75],
+    [-33.75, -43.5],
+    [-34, -42],
+
+    [-34, 42], //top left corner
+    [-33.75, 43.5],
+    [-33, 44.75],
+    [-32, 45.5],
+    [-31, 46],
+
+    [31, 46], //top right corner
+    [32, 45.5],
+    [33, 44.75],
+    [33.75, 43.5],
+    [34,42],
+
+      [34,29], //top of speed branch
+
+      [26,29], //top of D
+      [26,30],
+      [25.75,31],
+      [25.5,32],
+      [25,33],
+      [24.5,34],
+      [24,34.5],
+      [23,35],
+      [22,35.5],
+      [21,35.75],
+      [17,35.75],
+
+      [17,29],
+
+      [19,29],
+      [19,33],
+      [21,33],
+      [22,32.5],
+      [23,32],
+      [24,31],
+
+      [24.5,29],
+
+      [24,27],
+      [23,26],
+      [22,25.5],
+      [21,25],
+      [19,25],
+      [19,28.98],
+
+      [17,28.98],
+
+      [17,24],
+
+      [14.75,24], //top of E
+      [14.75,25],
+      [8,25],
+      [8,28.5],
+      [11.75,28.5],
+      [11.75,31],
+      [8,31],
+      [8,33.25],
+      [14.5,33.25],
+      [14.5,35.75],
+      [6,35.75],
+      [6,24],
+
+      [4,24], //top of E
+      [4,25],
+      [-3,25],
+      [-3,28.5],
+      [1,28.5],
+      [1,31],
+      [-3,31],
+      [-3,33.3],
+      [4,33.3],
+      [4,35.75],
+      [-5,35.75],
+      [-5,24],
+
+      [-14,24], //top of P
+      [-14,27.7],
+      [-10,27.7],
+      [-9,28],
+      [-8,28.7],
+      [-7.7,29],
+      [-7,30],
+      [-6.8,31],
+      [-6.8,32],
+      [-7,33],
+      [-7.4,34],
+      [-8,34.7],
+      [-8.3,35],
+      [-9,35.5],
+      [-10,35.75],
+      [-16,35.75],
+      [-16,32],
+      [-14,32],
+      [-14,33.5],
+      [-10,33.5],
+      [-9.5,33],
+      [-9,32],
+      [-9,31],
+      [-10,30],
+      [-14,30],
+      [-14,31.98],
+      [-16,31.98],
+      [-16,26],
+
+      [-18.5,26], // S
+      [-18.5,27],
+      [-18.75,28],
+      [-19,28.75],
+      [-19.4,29],
+      [-20,29.75],
+      [-20.75,30],
+      [-22,30.5],
+      [-23,30.8],
+      [-24,31],
+      [-25,32],
+      [-24.7,33],
+      [-24,33.5],
+      [-23,33.5],
+      [-22,33.25],
+      [-21,32.7],
+      [-20.5,32],
+      [-19,34],
+      [-20,35],
+      [-21,35.5],
+      [-22,35.75],
+      [-24,35.75],
+      [-25,35.5],
+      [-26,35],
+      [-27,34],
+      [-27.3,33],
+      [-27.3,32],
+      [-27.2,31],
+      [-26.75,30],
+      [-26.5,29.5],
+      [-26,29],
+      [-25,28.5],
+      [-24,28],
+      [-23,27.7],
+      [-22,27.4],
+      [-21.5,27],
+      [-21.5,26],
+      [-22,25.5],
+      [-23,25],
+      [-24,24.7],
+      [-25,25],
+      [-26,25.5],
+      [-26.7,26],
+      [-28,25],
+      [-27,24],
+      [-26,23],
+      [-25,22.7],
+      [-24,22.3],
+      [-23,22.3],
+      [-22,22.5],
+      [-21,22.7],
+      [-20,24],
+      [-19,25],
+      [-18.5,25.98],
+
+      [-16,25.98], //bottom of P
+      [-16,22.5],
+      [-14,22.5],
+      [-14,23.98],
+
+      [-5,23.98], //bottom of E
+      [-5,22.5],
+      [4,22.5],
+      [4,23.98],
+
+      [6,23.98], //bottom of E
+      [6,22.5],
+      [14.7,22.5],
+      [14.7,23.98],
+
+      [17,23.98], //bottom of D
+      [17,22.5],
+      [21,22.5],
+      [22,22.7],
+      [23,23],
+      [24,23.7],
+      [25,24.7],
+      [25.5,25],
+      [26,27],
+      [26,28.98],
+
+      [34,28.98], //bottom of speed branch
+
+      [34,15], //top of limit branch
+
+      [20.25,15], //top of T
+      [20.25,16],
+      [11.75,16],
+      [11.75,15],
+
+      [9.75,15], //top of I
+      [9.75,16],
+      [7.75,16],
+      [7.75,14],
+
+      [4.7,14], //top of M
+      [4.7,16],
+      [2.6,16],
+      [-0.8,8],
+      [-4,16],
+      [-6,16],
+      [-6,11.02],
+
+      [-9,11.02], //top of I
+      [-9,16],
+      [-11.25,16],
+      [-11.25,4],
+
+      [-13,4], //L
+      [-13,5],
+      [-19.7,5],
+      [-19.7,16],
+      [-21.7,16],
+      [-21.7,2.7],
+      [-13,2.7],
+      [-13,3.98],
+
+      [-11.25,3.98], //bottom if I
+      [-11.25,2.7],
+      [-9,2.7],
+      [-9,11],
+
+      [-6,11], //bottom of M
+      [-6,2.7],
+      [-4,2.7],
+      [-4,10.7],
+      [-0.8,2.8],
+      [2.7,10.7],
+      [2.7,2.7],
+      [4.7,2.7],
+      [4.7,13.98],
+
+      [7.75,13.98], //bottom of I
+      [7.75,2.7],
+      [9.75,2.7],
+      [9.75,14.98],
+
+      [11.75,14.98], //bottom of T
+      [11.75,13.75],
+      [15,13.5],
+      [15,2.7],
+      [17,2.7],
+      [17,13.5],
+      [20.25,13.5],
+      [20.25,14.98],
+
+      [34,14.98], //bottom of limit branch
+
+
+  ];
+   const CameraLeftPoints = [
     [11, 6],
     [-4, 6],
     [-4, 3],
@@ -288,7 +555,7 @@ See simplify.js by Volodymyr Agafonkin (https://github.com/mourner/simplify-js)
 		joysticksContainers.append(
 			createDPadControl("Arrows", [
 				{ name: DPAD_AREA.Up, handler: createSArrow },
-				{ name: "DUMMY", handler: () => null, isSelectable: false },
+				{ name: DPAD_AREA.Down, handler: createSLsign },
 				{ name: DPAD_AREA.Left, icon: "turn-left", handler: createLArrow },
 				{ name: DPAD_AREA.Right, icon: "turn-right", handler: createRArrow },
 				{ name: DPAD_AREA.Middle, icon: "pencil", handler: createCustomArrow },
@@ -392,6 +659,9 @@ See simplify.js by Volodymyr Agafonkin (https://github.com/mourner/simplify-js)
     updateSelectedFeatureGeometry(getShapeWKT(shapePoints, openLayersCentroid));
   }
 
+  function createSLsign() {
+      applyShapeToSelectedFeature(SpeedLimitSign);
+  }
   function createLCamera() {
     applyShapeToSelectedFeature(CameraLeftPoints);
   }
@@ -475,7 +745,7 @@ See simplify.js by Volodymyr Agafonkin (https://github.com/mourner/simplify-js)
 
       $snackbarContainer.append($snackbarActions);
     }
-    
+
 
     $('#map-message-container').append($snackbarContainer);
     return {
@@ -525,7 +795,7 @@ See simplify.js by Volodymyr Agafonkin (https://github.com/mourner/simplify-js)
         break;
       default:
         console.error('updatePermanentHazard has been called but the given permanent hazard is not supported: ' + type);
-        break;  
+        break;
     }
   }
 
@@ -890,7 +1160,7 @@ See simplify.js by Volodymyr Agafonkin (https://github.com/mourner/simplify-js)
         options.width = getUserSelectedWidth();
       }
 
-      console.log(`Comment width: ${options.width}`);      
+      console.log(`Comment width: ${options.width}`);
 
       return getGeometryForLineString(getSelectedSegmentsMergedLineString(), options);
     }
