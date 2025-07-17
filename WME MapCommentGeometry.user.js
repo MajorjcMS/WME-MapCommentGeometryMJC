@@ -11,7 +11,7 @@
 // @downloadURL		https://github.com/MajorjcMS/WME-MapCommentGeometryMJC/blob/67d5a7f5d7c23c855b915a08c2a01568483a6be6/WME%20MapCommentGeometry.user.js
 // @updateURL		https://github.com/MajorjcMS/WME-MapCommentGeometryMJC/blob/67d5a7f5d7c23c855b915a08c2a01568483a6be6/WME%20MapCommentGeometry.user.js
 // @supportURL		https://github.com/YULWaze/WME-MapCommentGeometry/issues/new/choose
-// @version 		2025.06.06.1.mjc
+// @version 		2025.06.06.1.mjc.01
 // ==/UserScript==
 
 /* global W */
@@ -66,17 +66,17 @@ See simplify.js by Volodymyr Agafonkin (https://github.com/mourner/simplify-js)
 
   const SpeedLimitSign = [
 
-    [34, -42], // bottom right corner
-    [33.75, -43.5],
-    [33, -44.75],
-    [32, -45.5],
-    [31, -46],
+    [34, -22], // bottom right corner
+    [33.75, -23.5],
+    [33, -24.75],
+    [32, -25.5],
+    [31, -26],
 
-    [-31, -46], //bottom left corner
-    [-32, -45.5],
-    [-33, -44.75],
-    [-33.75, -43.5],
-    [-34, -42],
+    [-31, -26], //bottom left corner
+    [-32, -25.5],
+    [-33, -24.75],
+    [-33.75, -23.5],
+    [-34, -22],
 
     [-34, 42], //top left corner
     [-33.75, 43.5],
