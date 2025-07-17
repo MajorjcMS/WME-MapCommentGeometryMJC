@@ -66,17 +66,17 @@ See simplify.js by Volodymyr Agafonkin (https://github.com/mourner/simplify-js)
 
   const SpeedLimitSign = [
 
-    [34, -22], // bottom right corner
-    [33.75, -23.5],
-    [33, -24.75],
-    [32, -25.5],
-    [31, -26],
+    [34, -12], // bottom right corner
+    [33.75, -13.5],
+    [33, -14.75],
+    [32, -15.5],
+    [31, -16],
 
-    [-31, -26], //bottom left corner
-    [-32, -25.5],
-    [-33, -24.75],
-    [-33.75, -23.5],
-    [-34, -22],
+    [-31, -16], //bottom left corner
+    [-32, -15.5],
+    [-33, -14.75],
+    [-33.75, -13.5],
+    [-34, -12],
 
     [-34, 42], //top left corner
     [-33.75, 43.5],
