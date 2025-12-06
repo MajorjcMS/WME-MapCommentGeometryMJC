@@ -11,7 +11,7 @@
 // @downloadURL		https://github.com/MajorjcMS/WME-MapCommentGeometryMJC/blob/67d5a7f5d7c23c855b915a08c2a01568483a6be6/WME%20MapCommentGeometry.user.js
 // @updateURL		https://github.com/MajorjcMS/WME-MapCommentGeometryMJC/blob/67d5a7f5d7c23c855b915a08c2a01568483a6be6/WME%20MapCommentGeometry.user.js
 // @supportURL		https://github.com/YULWaze/WME-MapCommentGeometry/issues/new/choose
-// @version 		2025.06.06.1.mjc.01
+// @version 		2025.12.06.1.mjc.01
 // ==/UserScript==
 
 /* global W */
@@ -53,7 +53,7 @@ See simplify.js by Volodymyr Agafonkin (https://github.com/mourner/simplify-js)
 
 (async function () {
   await SDK_INITIALIZED;
-  const UPDATE_NOTES = "Added ability to create school zones and places";
+  const UPDATE_NOTES = "Fixed polygon geometry for school zones and places to remove holes (requested by Waze HQ for tile build compatibility)";
   const SCRIPT_NAME = GM_info.script.name;
   const SCRIPT_VERSION = GM_info.script.version;
   const idTitle = 0;
@@ -576,6 +576,35 @@ See simplify.js by Volodymyr Agafonkin (https://github.com/mourner/simplify-js)
     return null;
   }
 
+   /**
+   * Removes holes from a polygon geometry, keeping only the outer ring.
+   * This is necessary for school zones and venues as requested by Waze HQ for tile build compatibility.
+   * @param geometry The GeoJSON geometry (Polygon or MultiPolygon)
+   * @returns The geometry with only outer rings (no holes)
+   */
+  function removeHolesFromGeometry(geometry) {
+    if (!geometry || !geometry.type) return geometry;
+
+    if (geometry.type === 'Polygon') {
+      // For Polygon, keep only the first coordinate array (outer ring)
+      return {
+        type: 'Polygon',
+        coordinates: [geometry.coordinates[0]]
+      };
+    } 
+
+    if (geometry.type === 'MultiPolygon') {
+      // For MultiPolygon, keep only the first coordinate array (outer ring) of each polygon
+      return {
+        type: 'MultiPolygon',
+        coordinates: geometry.coordinates.map(polygon => [polygon[0]])
+      };
+    }
+
+    // For other geometry types, throw an error (as we don't expect holes anyway, and we can't remove them, so it's likely a mistake)
+    throw new Error('Unsupported geometry type for removing holes: ' + geometry.type);
+  }
+
   function convertLineToArrow(line) {
     const lastPoint = line.coordinates[line.coordinates.length - 1];
     const secondLastPoint = line.coordinates[line.coordinates.length - 2];
@@ -611,6 +640,11 @@ See simplify.js by Volodymyr Agafonkin (https://github.com/mourner/simplify-js)
       console.warn('updateSelectedFeatureGeometry has been called with multiple selected objects, only the first one will be updated');
     }
 
+    // Remove holes for school zones and venues (requested by Waze HQ for tile build compatibility)
+    const shouldRemoveHoles = selection.objectType === 'permanentHazard' || selection.objectType === 'venue';
+    if (shouldRemoveHoles) newGeometry = removeHolesFromGeometry(newGeometry);
+
+
     switch (selection.objectType) {
       case 'mapComment':
         wmeSdk.DataModel.MapComments.updateMapComment({
@@ -626,6 +660,7 @@ See simplify.js by Volodymyr Agafonkin (https://github.com/mourner/simplify-js)
           venueId: selection.ids[0].toString(),
           geometry: newGeometry,
         });
+        break;
       default:
         console.error('updateSelectedFeatureGeometry has been called but the selected feature is not supported: ' + selection.objectType);
         return false;
@@ -849,7 +884,11 @@ See simplify.js by Volodymyr Agafonkin (https://github.com/mourner/simplify-js)
           permanentHazard: {
             [defaultSymbol]: {
               strictBoundary: true,
+              removeHoles: true,
             },
+          },
+          venue: {
+            removeHoles: true,
           },
           [defaultSymbol]: {},
         };
@@ -887,11 +926,15 @@ See simplify.js by Volodymyr Agafonkin (https://github.com/mourner/simplify-js)
       // Add dropdown for comment width
       const selCommentWidth = $('<wz-select id="CommentWidth" style="flex: 1" />');
       selCommentWidth.append($('<wz-option value="SEG_WIDTH">Infer</wz-option>'));
-      selCommentWidth.append($('<wz-option value="5">5 m</wz-option>'));
+   //   selCommentWidth.append($('<wz-option value="5">5 m</wz-option>'));
       selCommentWidth.append($('<wz-option value="10">10 m</wz-option>'));
-      selCommentWidth.append($('<wz-option value="15">15 m</wz-option>'));
+   //   selCommentWidth.append($('<wz-option value="15">15 m</wz-option>'));
       selCommentWidth.append($('<wz-option value="20">20 m</wz-option>'));
-      selCommentWidth.append($('<wz-option value="25">25 m</wz-option>'));
+   //   selCommentWidth.append($('<wz-option value="25">25 m</wz-option>'));
+      selCommentWidth.append($('<wz-option value="30">30 m</wz-option>'));
+      selCommentWidth.append($('<wz-option value="40">40 m</wz-option>'));
+      selCommentWidth.append($('<wz-option value="50">50 m</wz-option>'));
+      selCommentWidth.append($('<wz-option value="100">100 m</wz-option>'));
       const widthToSelect = getLastCommentWidth(NaN);
       selCommentWidth.attr("value", isNaN(widthToSelect) ? "SEG_WIDTH" : widthToSelect);
       const selCommentWidthStyles = new CSSStyleSheet();
@@ -1104,7 +1147,14 @@ See simplify.js by Volodymyr Agafonkin (https://github.com/mourner/simplify-js)
         );
       }
 
-      return convertToLandmark(lineString, options.width);
+           let geometry = convertToLandmark(lineString, options.width);
+
+      // Remove holes from geometry if requested
+      if (options.removeHoles) {
+        geometry = removeHolesFromGeometry(geometry);
+      }
+
+      return geometry;
     }
 
     function ensureMetricUnits(value) {
@@ -1114,7 +1164,7 @@ See simplify.js by Volodymyr Agafonkin (https://github.com/mourner/simplify-js)
       if (userSettings && !userSettings.isImperial) return value;
 
       const conversionFactor = 0.3048; // 1 foot = 0.3048 meters
-      return Math.round(imperialValue * conversionFactor);
+      return Math.round(value * conversionFactor);
     }
 
     function getSegmentWidth(segmentId) {
