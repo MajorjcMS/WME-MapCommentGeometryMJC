@@ -1015,7 +1015,7 @@ See simplify.js by Volodymyr Agafonkin (https://github.com/mourner/simplify-js)
             type: 'mapComment',
             id: wmeSdk.DataModel.MapComments.addMapComment({
               geometry,
-            }),
+            }).toString(),
           }
         }, getFeatureGeometryOptions('mapComment')),
         createNewFeatureButton('venue', (geometry) => {
@@ -1024,7 +1024,7 @@ See simplify.js by Volodymyr Agafonkin (https://github.com/mourner/simplify-js)
             id: wmeSdk.DataModel.Venues.addVenue({
               category: 'OTHER',
               geometry,
-            }),
+            }).toString(),
           }
         }, getFeatureGeometryOptions('venue')),
         createNewFeatureButton('permanentHazard.schoolZone', (geometry) => {
@@ -1299,7 +1299,7 @@ See simplify.js by Volodymyr Agafonkin (https://github.com/mourner/simplify-js)
 
     const addFeatureEditorOpenedHandler = (featureType, handler) => {
       wmeSdk.Events.on({
-        eventName: "wme-feature-editor-rendered",
+        eventName: "wme-feature-editor-opened",
         eventHandler: (e) => {
           if (e.featureType !== featureType) return;
           handler(e);
